@@ -64,6 +64,10 @@ class UserService
         //Setter le mot de passe hashé
         $newUser->setPassword($hash);
 
+        // Set du nom de fichier
+        $newUser->setImgProfil($this->uploadFile());
+        dd($newUser);
+
         //Ajouter en BDD le compte
         $this->userRepository->create($newUser);
 
@@ -124,5 +128,47 @@ class UserService
         unset($_COOKIE["PHPSESSID"]);
         //Redirection vers home
         header('Location:/');
+    }
+
+    public function uploadFile(): ?string{
+        // Si la super globale contient un fichier
+        dd($_FILES);
+        if(isset($_FILES["img_profil"])){
+            // Récupèrer le nom temporaire
+            $temp_name = $_FILES["img_profil"]["tmp_name"];
+            // Récupèrer le nom original
+            $name_file = $_FILES["img_profil"]["name"];
+            // Récupèrer l'url du fichier
+            $upload_path = "assets/img/profil";
+            // Récupèrer l'extension via la fonction getFileExtension
+            $extension = $this->getFileExtension($name_file);
+            // Renommer le fichier en utilisant l'extension récupéré précedemment
+            $name_file = $this->renameFile($extension);
+            // Déplacer le fichier après upload
+            move_uploaded_file($temp_name, $upload_path . $name_file);
+            return $name_file;
+        }
+        // Cas : pas de fichier fourni
+        return null;
+    }
+
+    /**
+     * Méthode pour renommer le fichier avec un nom aléatoire
+     * @param string $ext extension du fichier
+     * @return string nom de fichier renommée
+     */
+    private function renameFile(string $ext): string
+    {
+        return uniqid(true) . "." . $ext;
+    }
+
+    /**
+     * Méthode pour récupérer l'extension du fichier
+     * @param string $fileName nom de fichier
+     * @return string $ext extension du fichier
+     */
+    private function getFileExtension(string $fileName): string
+    {
+        return strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
     }
 }

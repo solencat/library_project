@@ -149,6 +149,7 @@ class User
         $newUser->setUpdatedAt(new \DateTimeImmutable($user["updated_at"] ?? "") ?? null);
         $newUser->setImgProfil($user["img_profil"] ?? null);
         $newUser->setGrant("ROLE_USER");
+        // dd($newUser);
         
         //Retourne l'objet User
         return $newUser;

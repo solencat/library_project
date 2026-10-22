@@ -18,6 +18,8 @@
             <input type="password" name="password" placeholder="saisir le mot de passe">
             <input type="password" name="confirm-password" placeholder="saisir le mot de passe">
             <input type="submit" value="Inscription" name="submit">
+
+            <input type="file" name="img_profil" enctype="multipart/form-data">
         </form>
         <p><?= htmlspecialchars($data["msg"] ?? "", ENT_QUOTES, 'UTF-8') ?></p>
     </main>
